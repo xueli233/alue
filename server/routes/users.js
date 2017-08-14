@@ -58,7 +58,7 @@ router.get('/checkLogin', (req, res, next) =>{
   }
 })
 // 退出cookie
-router.post('logout', (req, res, next)=>{
+router.post('/logout', (req, res, next)=>{
   res.cookie("userId", "",{
     path:'/',
   })

@@ -4,12 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueLazyLoad from 'vue-lazyload'
-import axios from 'axios'
+// import axios from 'axios'
 
 
 import infiniteScroll from 'vue-infinite-scroll'
 Vue.use(infiniteScroll) //使用插件
-Vue.use(axios)
+// Vue.use(axios)
 import '../static/css/base'
 import '../static/css/login'
 import '../static/css/product'

@@ -52,6 +52,7 @@
                   <i class="icon IconPwd"></i>
                   <input type="password" tabindex="2" name="password" placeholder="Password"
                    class="regi_login_input regi_login_input_left login-input-no input_text"
+                   v-model="userPwd"
                     @keyup.enter="login">
                 </li>
               </ul>
@@ -94,7 +95,7 @@ import axios from 'axios'
         }
         console.log('aa')
         axios.post("/users/login", {
-          userName: this.userName,
+          userName:this.userName,
           userPwd: this.userPwd
         }).then( (response) => {
           let res = response.data;
