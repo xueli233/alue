@@ -20,7 +20,7 @@ mongoose.connection.on('disconnected', () => {
  * 
 */
 router.get('/list', (req, res, next) => {
-  let sort = req.param("sort"); //排序方式
+  let sort = parseInt(req.param("sort")); //排序方式
   let page = parseInt(req.param("page")); //第几页
   let pagesize = parseInt(req.param("pagesize")); //每页个数
   let skip = (page - 1) * pagesize //跳过条数
@@ -45,7 +45,6 @@ router.get('/list', (req, res, next) => {
   }
   //数据库排序
   let goodModel = Goods.find(param).limit(pagesize).skip(skip);
-  if(sort != 0)
   goodModel.sort({'salePrice':sort})
   goodModel.exec({params:param},function(err, docs){
       res.json({
@@ -59,6 +58,7 @@ router.get('/list', (req, res, next) => {
  * 加入购物车
  * */
 router.post('/addCart', (req,res,next) => {
+  // var userId = req.body.userId 
   var userId = '100000077';
   var productId = req.body.productId;
   // var productId = '201710013'
@@ -106,7 +106,7 @@ router.post('/addCart', (req,res,next) => {
           res.json({
             status:0,
             msg:'第一次加入购物车',
-            result: doc2
+            result: ''
           })
         })
       })

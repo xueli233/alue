@@ -154,6 +154,10 @@ loadMore: function() {
  - 后端:
   - user模型 `userId`
   - router/goods.js
+- 购物车
+  - router/index.js内引入组件
+  - 添加path
+  - 跳转<router-link to="/users/cartList">
 
 ### 解决问题
 
@@ -176,6 +180,7 @@ loadMore: function() {
 - cookie客户端,session
   - session一定时间内保存在服务器上
   - 登录信息存放在session
+  
 ### 规划
 
 - 购物车，增加，删除，提交,登录,登录拦截，注销,全局 组件

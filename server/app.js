@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 // 所有访问都走这个逻辑
 app.use( function(req, res, next){
   if(req.cookies.userId){
@@ -30,6 +31,7 @@ app.use( function(req, res, next){
   } else {
     if(req.originalUrl == '/users/login'
       || req.originalUrl == '/users/logout'
+      // || req.originalUrl == '/users/cartList'
       || req.path == '/goods/list'){
       next()
     } else{

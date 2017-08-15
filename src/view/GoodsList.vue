@@ -59,12 +59,28 @@
       </div>
     </div>
     <nav-footer></nav-footer>
+    <!-- 加入购物车提示框 -->
+    <Modal :mdShow='mdShow'>
+      <p slot="message">请先登录否则无法加入购物车</p>
+      <div slot="btnGroup">
+        <a href="javascript:" class="btn-login" @click="mdShow=false">关闭</a>
+      </div>
+    </Modal>
+    <!-- 登录成功的情况下 -->
+    <modal :mdShow="addShow">
+      <p slot="message">加入购物车成功</p>
+      <div slot="btnGroup">
+        <a href="javascript:" class="btn btn--m" @click="addShow=false" >继续购物</a>
+        <router-link class="btn btn--m" to="/cart">查看购物车</router-link>
+      </div>
+    </modal>
   </div>
 </template>
 <script>
 import NavHeader from '@/components/Header'
 import NavFooter from '@/components/Footer'
 import NavBread from '@/components/NavBread'
+import Modal from '@/components/Modal'
 import axios from 'axios'
 export default {
   name: 'GoodsList',
@@ -75,6 +91,8 @@ export default {
       priceSort: 'Price ↓',
       sortFlag: true,
       busy: true,
+      mdShow: false,
+      addShow: false,
       page: 1,
       pagesize: 8,
       priceFilter: [
@@ -88,7 +106,8 @@ export default {
   components: {
     NavHeader,
     NavFooter,
-    NavBread
+    NavBread,
+    Modal,
   },
   mounted: function () {
     this.getGoodsList()
@@ -149,8 +168,14 @@ export default {
         data: {
           productId: productId,
         }
-      }).then((res) => {
-        console.log(res.data.msg)
+      }).then((response) => {
+        let res = response.data
+        // console.log(res)
+        if(res.status == 1){
+          this.mdShow = true
+        } else {
+          this.addShow = true
+        }
       })
     }
   }

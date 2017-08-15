@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../models/user');
+var User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -13,13 +13,14 @@ router.post('/login', (req, res, next) => {
     userName: req.body.userName,
     userPwd: req.body.userPwd
   }
+
   // 用户名是否存在
-  user.findOne(param, (err, doc) => {
+  User.findOne(param, (err, doc) => {
     if(err) {
       res.json({
         status: '1',
         msg: '登录失败,用户名或密码错误',
-        result: err
+        // result: err
       })
     } else {
       // 种cookie
@@ -41,7 +42,7 @@ router.post('/login', (req, res, next) => {
     }
   })
 })
-
+// 确认用户是否存在
 router.get('/checkLogin', (req, res, next) =>{
   if(req.cookies.userId){
     res.json({
@@ -61,6 +62,7 @@ router.get('/checkLogin', (req, res, next) =>{
 router.post('/logout', (req, res, next)=>{
   res.cookie("userId", "",{
     path:'/',
+    maxAge: -1
   })
   res.json({
     status:'0',
@@ -69,9 +71,72 @@ router.post('/logout', (req, res, next)=>{
   })
 })
 
+
+// 查询购物车列表
+router.get("/cartList", (req, res, next) =>{
+  let userId = req.cookies.userId
+  console.log()
+  User.findOne({userId:userId}, (err, doc) => {
+    if(err){ // 如果出错
+      res.json({
+        status: '1',
+        msg: '',
+        result: err.message
+      })
+    } else { // 取得数据
+      if(doc){
+        res.json({
+          status: '0',
+          msg: '',
+          result: doc.cartList
+        })
+      }
+    }
+  })
+})
+// 编辑商品
+router.post('/cartEdit', (req, res, next)=>{
+  let userId = req.cookies.userId
+  let productId = req.body.productId
+  let productNum = req.body.productNum
+  // 更新数量
+  User.update({"userId":userId,"cartList.productId":productId}, {
+    "cartList.$.productNum": productNum,
+  }, (err, doc)=>{
+    if(err){
+      res.json({
+        status: '1',
+        msg: '商品更新失败',
+        result: err.message
+      })
+    } else {
+      res.json({
+        status: '0',
+        msg: '商品更新成功',
+        result: doc
+      })
+    }
+  })
+})
+// 删除商品
+router.post("/cartDel", (req, res, next) =>{
+  var userId = req.cookies.userId,productId = req.body.productId;
+  User.update({"userId":userId},{
+    $pull: {
+      "cartList":{
+        "productId":productId
+      }
+    }
+  }, (err,doc) =>{
+    if(err){
+      res.json({status:'1',msg:'',result:err.message})
+    } else {
+      res.json({status:'0',msg:'商品删除成功',result:doc})
+    }
+  })
+})
 // 登录
 router.get('*', (req, res, next) => {
   res.send('haha')
 })
-
 module.exports = router;

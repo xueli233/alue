@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueLazyLoad from 'vue-lazyload'
+// import Cart from '@/components/Cart'
 // import axios from 'axios'
 
 
@@ -13,6 +14,7 @@ Vue.use(infiniteScroll) //使用插件
 import '../static/css/base'
 import '../static/css/login'
 import '../static/css/product'
+import '../static/css/checkout'
 
 Vue.config.productionTip = false
 

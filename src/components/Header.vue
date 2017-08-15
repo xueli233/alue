@@ -17,7 +17,7 @@
           <!--<a href="/" class="navbar-link">我的账户</a>-->
           <span class="navbar-link"></span>
           <span v-text="nickName" v-if="nickName"></span>
-          <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true">Login</a>
+          <a href="javascript:void(0)" class="navbar-link" v-if="!nickName" @click="loginModalFlag=true">Login</a>
           <a href="javascript:void(0)" class="navbar-link" @click="logout">Logout</a>
           <div class="navbar-cart-container">
             <span class="navbar-cart-count"></span>
@@ -30,7 +30,6 @@
         </div>
       </div>
     </div>
-
     <!-- 登录框 -->
       <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':loginModalFlag}">
         <div class="md-modal-inner">
@@ -66,7 +65,7 @@
       </div>
       <!-- 遮罩层 -->
       <div class="md-overlay md-show" v-if="loginModalFlag">
-    </div>
+  </div>
 </header>
 </template>
 
@@ -79,7 +78,7 @@ import axios from 'axios'
     }, 
     data() {
       return {
-        loginModalFlag: true,
+        loginModalFlag: false,
         userName: '',
         userPwd: '',
         errorTip:false,
@@ -93,15 +92,18 @@ import axios from 'axios'
           this.errorTip = true;
           return false
         }
-        console.log('aa')
+
         axios.post("/users/login", {
           userName:this.userName,
           userPwd: this.userPwd
         }).then( (response) => {
+          // console.log(response)
           let res = response.data;
           if(res.status == '0') {
             this.loginModalFlag = false
-            this.nickName = res.userName
+            this.nickName = res.result.userName
+            // console.log(res.userName)
+            // console.log(this.nickName)
           }
         })
       },
@@ -111,9 +113,11 @@ import axios from 'axios'
         })
       },
       logout() {
-        axios.post('/users/logout', (response) =>{
+
+        axios.post("/users/logout").then( (response) =>{
           let res = response.data
           if(res.status == '0'){
+            this.nickName = ''
           }
         })
       }
