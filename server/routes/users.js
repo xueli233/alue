@@ -99,9 +99,11 @@ router.post('/cartEdit', (req, res, next)=>{
   let userId = req.cookies.userId
   let productId = req.body.productId
   let productNum = req.body.productNum
+  let checked = req.body.checked
   // 更新数量
   User.update({"userId":userId,"cartList.productId":productId}, {
-    "cartList.$.productNum": productNum,
+    "cartList.$.productNum": productNum, // 商品数量
+    "cartList.$.checked": checked, //是否勾选
   }, (err, doc)=>{
     if(err){
       res.json({
@@ -135,8 +137,34 @@ router.post("/cartDel", (req, res, next) =>{
     }
   })
 })
-// 登录
-router.get('*', (req, res, next) => {
-  res.send('haha')
+// 全选的接口
+router.post('/editCheckAll', (req, res, next)=>{
+  let userId = req.cookies.userId //获取用户id
+  checkAll = req.body.checkAll ? '1': '0' // 是否全选
+  User.findOne({userId:userId},(err, doc) => {
+    if(err){
+      res.json({
+        status: '1',
+        msg: '',
+        result:''
+      })
+    } else {
+      doc.cartList.forEach((item)=>{
+        item.checked = checkAll
+      })
+      // 把更改存入数据库
+      doc.save((err1,doc1)  => {
+        if(err){
+          res.json({status:'1',msg:err.message,result:''})
+        } else {
+          res.json({status:'1',msg:'操作成功',result:''})
+        }
+      })
+    }
+  })
 })
+// // 登录
+// router.get('*', (req, res, next) => {
+//   res.send('haha')
+// })
 module.exports = router;

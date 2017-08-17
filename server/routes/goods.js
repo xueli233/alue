@@ -99,6 +99,7 @@ router.post('/addCart', (req,res,next) => {
     } else { //第一次添加购物车
       Goods.findOne({ productId: productId },(err1, goodsDoc) => {
         goodsDoc.productNum = 1;
+        goodsDoc.checked = 1; // checked 字段
         userDoc.cartList.push(goodsDoc) // 加入
         userDoc.save((err2, doc2) => {
           if(err2) throw err2// 返回数据
